@@ -7,7 +7,6 @@ int main(int argc, char **argv)
         std::cout << "ERROR" << std::endl;
         return 1;
     }
-    std::string args(argv[1]);
-    RPN rpn(args);
+    RPN rpn(argv[1]);
     return 0;
 }

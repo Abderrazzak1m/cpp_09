@@ -9,9 +9,11 @@ class  BitcoinExchange
         std::map<std::string, float> input;
     public:
         BitcoinExchange();
-        bool getDb();
         BitcoinExchange(std::string filename);
         ~BitcoinExchange();
+        BitcoinExchange(const BitcoinExchange &other);
+        BitcoinExchange &operator=(const BitcoinExchange &other);
+        bool getDb();
         std::string trim(std::string line);
         std::string parseDate(std::string line);
         float parseValue(std::string line);
