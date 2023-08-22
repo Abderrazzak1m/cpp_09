@@ -13,7 +13,15 @@ PmergeMe::PmergeMe(char **args)
         l.push_back(atoi(args[i]));
         std::cout << v.back() << " ";
     }
+    this->size = v.size();
+    Ford_JohnsonV(v);   
     std::cout << std::endl;
+    std::cout << "After: ";
+    for (size_t i = 0; i < v.size(); i++)
+    {
+        std::cout << v[i] << " ";
+    }
+
 }
 
 PmergeMe::~PmergeMe()
@@ -36,38 +44,76 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &other)
     return (*this);
 }
 
-void PmergeMe::Ford_JohnsonV()
+void PmergeMe::Ford_JohnsonV(std::vector<int> &v)
 {
-    std::vector<int> v1;
-    std::vector<int> v2;
-    for(size_t i = 0; i < v.size() - 1; i+=2)
+    std::map<int, int> m;
+    std::vector<int> sortedV;
+    std::vector<int> unsortedV;
+
+    
+    if(v.size() <= 3)
     {
-        if(v[i] > v[i + 1])
+        std::sort(v.begin(), v.end());
+        return;
+    }
+    size_t size = v.size() % 2 == 0 ? v.size() : v.size() - 1;
+
+    for (size_t i = 0; i < size; i+=2)
+    {
+        if (v[i] >= v[i + 1])
         {
-            v1.push_back(v[i]);
-            v2.push_back(v[i + 1]);
+            sortedV.push_back(v[i]);
+            unsortedV.push_back(v[i+ 1]);
+            m[v[i]] = v[i+1];
         }
         else
         {
-            v1.push_back(v[i + 1]);
-            v2.push_back(v[i]);
+            sortedV.push_back(v[i + 1]);
+            unsortedV.push_back(v[i]);
+            m[v[i +1]] = v[i];
         }
-
     }
-        if(v.size() % 2 != 0)
-            v2.push_back(v[v.size() - 1]);
-        for(size_t j = 0; j < v1.size(); j++)
-        {
-            std::cout << v1[j] << " ";
-        }
-        std::cout << std::endl;
-        for(size_t j = 0; j < v2.size(); j++)
-        {
-            std::cout << v2[j] << " ";
-        }
-        std::cout << std::endl;
-}
 
+    if (v.size() % 2 != 0)
+    {
+        unsortedV.push_back(v.back());
+    }
+        
+    Ford_JohnsonV(sortedV);
+   
+
+    // for (size_t i = 0; i < unsortedV.size() ; i++)
+    // {
+    
+    //    std::vector<int>::iterator it = std::upper_bound(sortedV.begin(), sortedV.end(), unsortedV[i]);
+    //    sortedV.insert(it, unsortedV[i]);
+       
+    // }
+    v.clear();
+    v.assign(sortedV.begin(), sortedV.end());
+
+    for(size_t i = 0; i < sortedV.size(); i++)
+    {
+        std::cout << "----------------------------------"<< sortedV.size() << std::endl;
+        std::map<int, int>::iterator itt = m.find(sortedV[i]);
+        if(itt != m.end())
+        {
+            std::vector<int>::iterator it = std::upper_bound(v.begin(), v.begin() + i, itt->second);
+            v.insert(it, itt->second);
+        }
+    }
+    if(v.size() % 2 != 0)
+    {
+       std::vector<int>::iterator it = std::upper_bound(v.begin(), v.end(), unsortedV.back());
+         v.insert(it, unsortedV.back());
+    }
+
+   
+//     if(v.size() == sortedV.size())
+//     {   v.clear();
+//         v = sortedV;
+//     }
+}
 void PmergeMe::Ford_JohnsonL()
 {
 }
